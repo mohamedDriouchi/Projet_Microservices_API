@@ -1,0 +1,5 @@
+fr.univamu.iut.serviceplatsutilisateurs.domain.model
+fr.univamu.iut.serviceplatsutilisateurs.domain.repository
+fr.univamu.iut.serviceplatsutilisateurs.infrastructure.api.config
+fr.univamu.iut.serviceplatsutilisateurs.infrastructure.api.controller
+fr.univamu.iut.serviceplatsutilisateurs.infrastructure.persistence.mysql
