@@ -2,6 +2,8 @@ package fr.univamu.iut.serviceplatsutilisateurs.infrastructure.api.config;
 
 import fr.univamu.iut.serviceplatsutilisateurs.domain.repository.PlatRepositoryInterface;
 import fr.univamu.iut.serviceplatsutilisateurs.domain.repository.UtilisateurRepositoryInterface;
+import fr.univamu.iut.serviceplatsutilisateurs.infrastructure.api.controller.PlatResource;
+import fr.univamu.iut.serviceplatsutilisateurs.infrastructure.api.controller.UtilisateurResource;
 import fr.univamu.iut.serviceplatsutilisateurs.infrastructure.persistence.mysql.PlatRepositoryMysql;
 import fr.univamu.iut.serviceplatsutilisateurs.infrastructure.persistence.mysql.UtilisateurRepositoryMysql;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -10,11 +12,21 @@ import jakarta.enterprise.inject.Produces;
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
 
 @ApplicationPath("/api")
 @ApplicationScoped
 public class RestApplication extends Application {
+
+    @Override
+    public Set<Class<?>> getClasses() {
+        Set<Class<?>> classes = new HashSet<>();
+        classes.add(PlatResource.class);
+        classes.add(UtilisateurResource.class);
+        return classes;
+    }
 
     private Properties loadConfig() {
         Properties props = new Properties();
