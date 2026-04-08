@@ -1,6 +1,6 @@
-package fr.univamu.iut.serviceplatsutilisateurs.resource;
+package fr.univamu.iut.serviceplatsutilisateurs.domain.repository;
 
-import fr.univamu.iut.serviceplatsutilisateurs.model.Plat;
+import fr.univamu.iut.serviceplatsutilisateurs.domain.model.Plat;
 import java.util.List;
 
 public interface PlatRepositoryInterface {

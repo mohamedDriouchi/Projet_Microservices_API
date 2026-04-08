@@ -1,6 +1,9 @@
-package fr.univamu.iut.serviceplatsutilisateurs;
+package fr.univamu.iut.serviceplatsutilisateurs.infrastructure.api.config;
 
-import fr.univamu.iut.serviceplatsutilisateurs.resource.*;
+import fr.univamu.iut.serviceplatsutilisateurs.domain.repository.PlatRepositoryInterface;
+import fr.univamu.iut.serviceplatsutilisateurs.domain.repository.UtilisateurRepositoryInterface;
+import fr.univamu.iut.serviceplatsutilisateurs.infrastructure.persistence.mysql.PlatRepositoryMysql;
+import fr.univamu.iut.serviceplatsutilisateurs.infrastructure.persistence.mysql.UtilisateurRepositoryMysql;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Disposes;
 import jakarta.enterprise.inject.Produces;

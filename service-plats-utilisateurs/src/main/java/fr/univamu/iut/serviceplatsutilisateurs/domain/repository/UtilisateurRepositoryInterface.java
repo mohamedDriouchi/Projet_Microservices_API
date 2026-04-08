@@ -1,6 +1,6 @@
-package fr.univamu.iut.serviceplatsutilisateurs.resource;
+package fr.univamu.iut.serviceplatsutilisateurs.domain.repository;
 
-import fr.univamu.iut.serviceplatsutilisateurs.model.Utilisateur;
+import fr.univamu.iut.serviceplatsutilisateurs.domain.model.Utilisateur;
 import java.util.List;
 
 public interface UtilisateurRepositoryInterface {
