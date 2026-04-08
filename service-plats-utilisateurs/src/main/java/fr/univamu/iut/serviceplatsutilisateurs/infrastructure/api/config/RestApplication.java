@@ -16,10 +16,33 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
+/**
+ * Configuration de l'application JAX-RS et point d'entrée pour l'API REST.
+ * Cette classe configure le chemin racine de l'API (/api), enregistre les ressources REST,
+ * et gère l'injection de dépendances CDI pour les repositories.
+ *
+ * @author Service Plats-Utilisateurs
+ * @version 1.0
+ */
 @ApplicationPath("/api")
 @ApplicationScoped
 public class RestApplication extends Application {
 
+    /** Configuration de l'application chargée au démarrage */
+    private Properties config;
+
+    /**
+     * Constructeur. Charge la configuration depuis config.properties.
+     */
+    public RestApplication() {
+        this.config = loadConfig();
+    }
+
+    /**
+     * Enregistre les classes de ressources REST auprès de JAX-RS.
+     *
+     * @return un ensemble contenant les classes des contrôleurs REST
+     */
     @Override
     public Set<Class<?>> getClasses() {
         Set<Class<?>> classes = new HashSet<>();
@@ -28,6 +51,13 @@ public class RestApplication extends Application {
         return classes;
     }
 
+    /**
+     * Charge les propriétés de configuration depuis le fichier config.properties
+     * présent dans le classpath (src/main/resources).
+     *
+     * @return un objet Properties contenant la configuration
+     * @throws RuntimeException si le fichier config.properties n'est pas trouvé ou en cas d'erreur de lecture
+     */
     private Properties loadConfig() {
         Properties props = new Properties();
         try (InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties")) {
@@ -41,40 +71,64 @@ public class RestApplication extends Application {
         return props;
     }
 
+    /**
+     * Produit une instance du repository des plats pour l'injection dans les contrôleurs.
+     * Cette méthode est appelée une seule fois au démarrage de l'application (@ApplicationScoped).
+     *
+     * @return une instance de PlatRepositoryMysql configurée avec les paramètres BD
+     * @throws RuntimeException en cas d'erreur de connexion à la base de données
+     */
     @Produces
     @ApplicationScoped
     public PlatRepositoryInterface openPlatDb() {
-        Properties props = loadConfig();
         try {
             return new PlatRepositoryMysql(
-                    props.getProperty("db.url"),
-                    props.getProperty("db.user"),
-                    props.getProperty("db.pwd")
+                    config.getProperty("db.url"),
+                    config.getProperty("db.user"),
+                    config.getProperty("db.pwd")
             );
         } catch (Exception e) {
             throw new RuntimeException("Echec connexion MySQL (Plats) : " + e.getMessage());
         }
     }
 
+    /**
+     * Produit une instance du repository des utilisateurs pour l'injection dans les contrôleurs.
+     * Cette méthode est appelée une seule fois au démarrage de l'application (@ApplicationScoped).
+     *
+     * @return une instance de UtilisateurRepositoryMysql configurée avec les paramètres BD
+     * @throws RuntimeException en cas d'erreur de connexion à la base de données
+     */
     @Produces
     @ApplicationScoped
     public UtilisateurRepositoryInterface openUserDb() {
-        Properties props = loadConfig();
         try {
             return new UtilisateurRepositoryMysql(
-                    props.getProperty("db.url"),
-                    props.getProperty("db.user"),
-                    props.getProperty("db.pwd")
+                    config.getProperty("db.url"),
+                    config.getProperty("db.user"),
+                    config.getProperty("db.pwd")
             );
         } catch (Exception e) {
             throw new RuntimeException("Echec connexion MySQL (Users) : " + e.getMessage());
         }
     }
 
+    /**
+     * Libère les ressources du repository des plats à la fermeture de l'application.
+     * Méthode appelée automatiquement par CDI.
+     *
+     * @param repo le repository des plats à fermer
+     */
     public void closePlat(@Disposes PlatRepositoryInterface repo) {
         if (repo != null) repo.close();
     }
 
+    /**
+     * Libère les ressources du repository des utilisateurs à la fermeture de l'application.
+     * Méthode appelée automatiquement par CDI.
+     *
+     * @param repo le repository des utilisateurs à fermer
+     */
     public void closeUser(@Disposes UtilisateurRepositoryInterface repo) {
         if (repo != null) repo.close();
     }
