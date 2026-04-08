@@ -24,7 +24,8 @@ public class UtilisateurRepositoryMysql implements UtilisateurRepositoryInterfac
                         rs.getInt("id"),
                         rs.getString("nom"),
                         rs.getString("prenom"),
-                        rs.getString("email")
+                        rs.getString("email"),
+                        rs.getString("adresse")
                 ));
             }
         } catch (SQLException e) {
@@ -44,7 +45,8 @@ public class UtilisateurRepositoryMysql implements UtilisateurRepositoryInterfac
                             rs.getInt("id"),
                             rs.getString("nom"),
                             rs.getString("prenom"),
-                            rs.getString("email")
+                            rs.getString("email"),
+                            rs.getString("adresse")
                     );
                 }
             }
@@ -56,11 +58,12 @@ public class UtilisateurRepositoryMysql implements UtilisateurRepositoryInterfac
 
     @Override
     public boolean save(Utilisateur user) {
-        String query = "INSERT INTO UTILISATEUR (nom, prenom, email) VALUES (?, ?, ?)";
+        String query = "INSERT INTO UTILISATEUR (nom, prenom, email, adresse) VALUES (?, ?, ?, ?)";
         try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
             ps.setString(1, user.getNom());
             ps.setString(2, user.getPrenom());
             ps.setString(3, user.getEmail());
+            ps.setString(4, user.getAdresse());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();

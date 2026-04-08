@@ -26,14 +26,12 @@ public class UtilisateurResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUserById(@PathParam("id") int id) {
         Utilisateur user = userRepo.findById(id);
-        if (user == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(user).build();
+        return (user != null) ? Response.ok(user).build() : Response.status(Response.Status.NOT_FOUND).build();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response createUser(Utilisateur user) {
         if (userRepo.save(user)) {
             return Response.status(Response.Status.CREATED).entity(user).build();
@@ -41,12 +39,20 @@ public class UtilisateurResource {
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
+    @PUT
+    @Path("/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateUser(@PathParam("id") int id, Utilisateur user) {
+        user.setId(id);
+        if (userRepo.save(user)) {
+            return Response.ok().build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
+    }
+
     @DELETE
     @Path("/{id}")
     public Response deleteUser(@PathParam("id") int id) {
-        if (userRepo.delete(id)) {
-            return Response.noContent().build();
-        }
-        return Response.status(Response.Status.NOT_FOUND).build();
+        return userRepo.delete(id) ? Response.noContent().build() : Response.status(Response.Status.NOT_FOUND).build();
     }
 }

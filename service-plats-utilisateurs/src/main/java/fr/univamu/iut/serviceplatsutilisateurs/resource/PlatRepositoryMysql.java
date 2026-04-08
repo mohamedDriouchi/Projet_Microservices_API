@@ -20,7 +20,12 @@ public class PlatRepositoryMysql implements PlatRepositoryInterface {
         try (Statement stmt = dbConnection.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
             while (rs.next()) {
-                plats.add(new Plat(rs.getInt("id"), rs.getString("nom")));
+                plats.add(new Plat(
+                        rs.getInt("id"),
+                        rs.getString("nom"),
+                        rs.getString("description"),
+                        rs.getDouble("prix")
+                ));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -35,7 +40,12 @@ public class PlatRepositoryMysql implements PlatRepositoryInterface {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return new Plat(rs.getInt("id"), rs.getString("nom"));
+                    return new Plat(
+                            rs.getInt("id"),
+                            rs.getString("nom"),
+                            rs.getString("description"),
+                            rs.getDouble("prix")
+                    );
                 }
             }
         } catch (SQLException e) {
@@ -46,9 +56,11 @@ public class PlatRepositoryMysql implements PlatRepositoryInterface {
 
     @Override
     public boolean save(Plat plat) {
-        String query = "INSERT INTO PLAT (nom) VALUES (?)";
+        String query = "INSERT INTO PLAT (nom, description, prix) VALUES (?, ?, ?)";
         try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
             ps.setString(1, plat.getNom());
+            ps.setString(2, plat.getDescription());
+            ps.setDouble(3, plat.getPrix());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
