@@ -6,30 +6,37 @@ import jakarta.enterprise.inject.Disposes;
 import jakarta.enterprise.inject.Produces;
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
+import java.io.InputStream;
+import java.util.Properties;
 
-/**
- * Configuration de l'application REST et Producteurs de dépendances.
- */
 @ApplicationPath("/api")
 @ApplicationScoped
 public class RestApplication extends Application {
 
-    // Récupère les paramètres de connexion depuis les variables d'environnement
-    private static final String URL = System.getenv("DB_URL") != null ?
-        System.getenv("DB_URL") : "jdbc:mysql://localhost:3306/projet_api?useSSL=false&serverTimezone=UTC";
-    private static final String USER = System.getenv("DB_USER") != null ?
-        System.getenv("DB_USER") : "root";
-    private static final String PWD = System.getenv("DB_PASSWORD") != null ?
-        System.getenv("DB_PASSWORD") : "";
+    private Properties loadConfig() {
+        Properties props = new Properties();
+        try (InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties")) {
+            if (input == null) {
+                throw new RuntimeException("Fichier config.properties introuvable dans src/main/resources");
+            }
+            props.load(input);
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur de configuration : " + e.getMessage());
+        }
+        return props;
+    }
 
     @Produces
     @ApplicationScoped
     public PlatRepositoryInterface openPlatDb() {
+        Properties props = loadConfig();
         try {
-            // On appelle l'implémentation MySQL
-            return new PlatRepositoryMysql(URL, USER, PWD);
+            return new PlatRepositoryMysql(
+                    props.getProperty("db.url"),
+                    props.getProperty("db.user"),
+                    props.getProperty("db.pwd")
+            );
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException("Echec connexion MySQL (Plats) : " + e.getMessage());
         }
     }
@@ -37,11 +44,14 @@ public class RestApplication extends Application {
     @Produces
     @ApplicationScoped
     public UtilisateurRepositoryInterface openUserDb() {
+        Properties props = loadConfig();
         try {
-            // On appelle l'implémentation MySQL
-            return new UtilisateurRepositoryMysql(URL, USER, PWD);
+            return new UtilisateurRepositoryMysql(
+                    props.getProperty("db.url"),
+                    props.getProperty("db.user"),
+                    props.getProperty("db.pwd")
+            );
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException("Echec connexion MySQL (Users) : " + e.getMessage());
         }
     }
