@@ -1,4 +1,4 @@
-package fr.univamu.iut.serviceplatsutilisateurs.model;
+package fr.univamu.iut.serviceplatsutilisateurs.domain.model;
 
 public class Plat {
     private int id;

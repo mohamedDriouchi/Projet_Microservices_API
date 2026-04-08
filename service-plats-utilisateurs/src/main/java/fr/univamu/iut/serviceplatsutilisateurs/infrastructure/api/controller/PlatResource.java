@@ -1,6 +1,7 @@
-package fr.univamu.iut.serviceplatsutilisateurs.resource;
+package fr.univamu.iut.serviceplatsutilisateurs.infrastructure.api.controller;
 
-import fr.univamu.iut.serviceplatsutilisateurs.model.Plat;
+import fr.univamu.iut.serviceplatsutilisateurs.domain.model.Plat;
+import fr.univamu.iut.serviceplatsutilisateurs.domain.repository.PlatRepositoryInterface;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
