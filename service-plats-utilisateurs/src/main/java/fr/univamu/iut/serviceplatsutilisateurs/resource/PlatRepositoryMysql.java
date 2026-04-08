@@ -5,11 +5,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlatRepositoryMariadb implements PlatRepositoryInterface {
+public class PlatRepositoryMysql implements PlatRepositoryInterface {
     private Connection dbConnection;
 
-    public PlatRepositoryMariadb(String url, String user, String pwd) throws Exception {
-        Class.forName("org.mariadb.jdbc.Driver");
+    public PlatRepositoryMysql(String url, String user, String pwd) throws Exception {
+        Class.forName("com.mysql.cj.jdbc.Driver");
         this.dbConnection = DriverManager.getConnection(url, user, pwd);
     }
 

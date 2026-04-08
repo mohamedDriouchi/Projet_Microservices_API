@@ -5,7 +5,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UtilisateurRepositoryMariadb implements UtilisateurRepositoryInterface {
+public class UtilisateurRepositoryMysql implements UtilisateurRepositoryInterface {
     private Connection dbConnection;
 
     /**
@@ -14,9 +14,8 @@ public class UtilisateurRepositoryMariadb implements UtilisateurRepositoryInterf
      * @param user Nom d'utilisateur AlwaysData
      * @param pwd Mot de passe AlwaysData
      */
-    public UtilisateurRepositoryMariadb(String url, String user, String pwd) throws Exception {
-        // Chargement explicite du driver comme demandé dans le TD
-        Class.forName("org.mariadb.jdbc.Driver");
+    public UtilisateurRepositoryMysql(String url, String user, String pwd) throws Exception {
+        Class.forName("com.mysql.cj.jdbc.Driver");
         this.dbConnection = DriverManager.getConnection(url, user, pwd);
     }
 
