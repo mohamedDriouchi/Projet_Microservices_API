@@ -2,6 +2,7 @@ package fr.univamu.iut.servicemenus.infrastructure.api.config;
 
 import fr.univamu.iut.servicemenus.domain.repository.MenuRepositoryInterface;
 import fr.univamu.iut.servicemenus.infrastructure.api.controller.MenuResource;
+import fr.univamu.iut.servicemenus.infrastructure.api.controller.TestResource;
 import fr.univamu.iut.servicemenus.infrastructure.persistence.mysql.MenuRepositoryMysql;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Disposes;
@@ -32,7 +33,17 @@ public class RestApplication extends Application {
      * Constructeur. Charge la configuration depuis config.properties.
      */
     public RestApplication() {
-        this.config = loadConfig();
+        try {
+            this.config = loadConfig();
+        } catch (Exception e) {
+            System.err.println("⚠️ ERREUR: Impossible de charger la configuration: " + e.getMessage());
+            e.printStackTrace();
+            // Initialiser avec une config par défaut
+            this.config = new Properties();
+            this.config.setProperty("db.url", "jdbc:mysql://localhost:3306/test");
+            this.config.setProperty("db.user", "root");
+            this.config.setProperty("db.pwd", "");
+        }
     }
 
     /**
@@ -43,6 +54,7 @@ public class RestApplication extends Application {
     @Override
     public Set<Class<?>> getClasses() {
         Set<Class<?>> classes = new HashSet<>();
+        classes.add(TestResource.class);  // Test en premier
         classes.add(MenuResource.class);
         return classes;
     }
